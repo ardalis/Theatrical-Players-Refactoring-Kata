@@ -1,16 +1,39 @@
+using System;
+
 namespace TheatricalPlayersRefactoringKata
 {
-    public class Play
+    public abstract class Play
     {
-        private string _name;
-        private string _type;
+        public string Name { get; private set; }
+        public string Type { get; private set; }
 
-        public string Name { get => _name; set => _name = value; }
-        public string Type { get => _type; set => _type = value; }
+        protected Play(string name, string type) {
+            this.Name = name;
+            this.Type = type;
+        }
 
-        public Play(string name, string type) {
-            this._name = name;
-            this._type = type;
+        public static Play GetPlayByType(string name, string playType)
+        {
+            switch (playType)
+            {
+                case "tragedy":
+                    return new TragedyPlay(name);
+                case "history":
+                    return new HistoryPlay(name);
+                case "pastoral":
+                    return new PastoralPlay(name);
+                case "comedy":
+                    return new ComedyPlay(name);
+                default:
+                    throw new Exception("unknown type: " + playType);
+            }
+        }
+
+        public abstract int GetAmount(int audience);
+
+        public virtual int GetVolumeCredits(int audience)
+        {
+            return Math.Max(audience - 30, 0);
         }
     }
 }
